@@ -1,0 +1,22 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "Node.Js restful API for ecommerce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guidorc/node-ecommerce.git"
+  },
+  "author": "Guido Rodriguez Celma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guidorc/node-ecommerce/issues"
+  },
+  "homepage": "https://github.com/guidorc/node-ecommerce#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
