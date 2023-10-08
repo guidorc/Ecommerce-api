@@ -2,10 +2,14 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 // import defined routes
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+
+// connect to mongo atlas db
+mongoose.connect('mongodb+srv://admin:' + process.env.MONGO_ATLAS_PW + '@node-ecommerce.pmicisn.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp');
 
 // use morgan to log incoming requests
 app.use(morgan('dev'));
