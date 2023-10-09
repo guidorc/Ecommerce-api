@@ -7,13 +7,25 @@ const Product = require("../models/product");
 
 router.get("/", (req, res, next) => {
   Product.find()
+    .select("name price _id")
     .exec()
     .then((docs) => {
-      console.log(docs);
-      res.status(200).json(docs);
+      const response = {
+        count: docs.length,
+        products: docs.map((doc) => {
+          return {
+            ...doc.toObject(),
+            info: {
+              type: "GET",
+              description: "Get product by id",
+              url: "http://localhost:3000/products/" + docs._id,
+            },
+          };
+        }),
+      };
+      res.status(200).json(response);
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         message: "Failed to find products",
       });
@@ -31,10 +43,18 @@ router.post("/", (req, res, next) => {
   product
     .save()
     .then((result) => {
-      console.log(result);
       res.status(200).json({
-        message: "Product successfully created",
-        createdProduct: result,
+        message: "Product created successfully",
+        createdProduct: {
+          _id: result._id,
+          name: result.name,
+          price: result.price,
+          info: {
+            type: "GET",
+            description: "Get product by id",
+            url: "http://localhost:3000/products/" + result._id,
+          },
+        },
       });
     })
     .catch((err) => {
@@ -49,11 +69,18 @@ router.post("/", (req, res, next) => {
 router.get("/:productId", (req, res, next) => {
   const id = req.params.productId;
   Product.findById(id)
+    .select("name price _id")
     .exec()
-    .then((doc) => {
-      if (doc) {
-        console.log(doc);
-        res.status(200).json(doc);
+    .then((result) => {
+      if (result) {
+        res.status(200).json({
+          ...result.toObject(),
+          info: {
+            type: "GET",
+            description: "Get all products",
+            url: "http://localhost:3000/products",
+          },
+        });
       } else {
         res.status(404).json({
           message: "Unable to find requested product",
@@ -77,7 +104,14 @@ router.patch("/:productId", (req, res, next) => {
   Product.updateOne({ _id: id }, { $set: updateOps })
     .exec()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        message: "Product updated successfully",
+        info: {
+          type: "GET",
+          description: "Get product by id",
+          url: "http://localhost:3000/products/" + id,
+        },
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -89,13 +123,27 @@ router.delete("/:productId", (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ _id: id })
     .exec()
-    .then((result) => {
-      res.status(200).json(result);
+    .then(() => {
+      res.status(200).json({
+        message: "Product deleted successfully",
+        info: {
+          type: "GET",
+          description: "Get all products",
+          url: "http://localhost:3000/products",
+        },
+      });
     })
     .catch((err) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+// handle requests to non specified routes
+router.use((req, res, next) => {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
 });
 
 module.exports = router;
