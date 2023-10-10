@@ -18,7 +18,7 @@ router.get("/", (req, res, next) => {
             info: {
               type: "GET",
               description: "Get product by id",
-              url: "http://localhost:3000/products/" + docs._id,
+              url: "http://localhost:3000/products/" + doc._id,
             },
           };
         }),
@@ -28,6 +28,7 @@ router.get("/", (req, res, next) => {
     .catch((err) => {
       res.status(500).json({
         message: "Failed to find products",
+        error: err,
       });
     });
 });
@@ -88,8 +89,9 @@ router.get("/:productId", (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+      res.status(500).json({
+        error: err,
+      });
     });
 });
 
@@ -134,7 +136,6 @@ router.delete("/:productId", (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json(err);
     });
 });
