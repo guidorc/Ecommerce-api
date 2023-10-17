@@ -18,6 +18,9 @@ mongoose.connect(
 // use morgan to log incoming requests
 app.use(morgan("dev"));
 
+// make uploads folder publicly available
+app.use("/uploads", express.static("uploads"));
+
 // setup body parsing
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
