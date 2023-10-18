@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 // import defined routes
 const productRoutes = require("./api/routes/products");
 const orderRoutes = require("./api/routes/orders");
+const userRoutes = require("./api/routes/user");
 
 // connect to mongo atlas db
 mongoose.connect(
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 // forward requests to specific routes
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+app.use("/user", userRoutes);
 
 // Allow access from any client (prevent CORS errors)
 app.use((req, res, next) => {
