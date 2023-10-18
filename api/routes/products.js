@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
+const checkAuth = require("../middleware/check-auth");
 
 // configure storage strategy
 const storage = multer.diskStorage({
@@ -62,40 +63,45 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", upload.single("referenceImage"), (req, res, next) => {
-  // create new product
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-    referenceImage: req.file.path || "uploads/default.jpg",
-  });
-  // save product to db
-  product
-    .save()
-    .then((result) => {
-      res.status(200).json({
-        message: "Product created successfully",
-        createdProduct: {
-          _id: result._id,
-          name: result.name,
-          price: result.price,
-          info: {
-            type: "GET",
-            description: "Get product by id",
-            url: "http://localhost:3000/products/" + result._id,
-          },
-        },
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: "Product creation failed",
-        error: err,
-      });
+router.post(
+  "/",
+  checkAuth,
+  upload.single("referenceImage"),
+  (req, res, next) => {
+    // create new product
+    const product = new Product({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      price: req.body.price,
+      referenceImage: (req.file && req.file.path) || "uploads/default.jpg",
     });
-});
+    // save product to db
+    product
+      .save()
+      .then((result) => {
+        res.status(200).json({
+          message: "Product created successfully",
+          createdProduct: {
+            _id: result._id,
+            name: result.name,
+            price: result.price,
+            info: {
+              type: "GET",
+              description: "Get product by id",
+              url: "http://localhost:3000/products/" + result._id,
+            },
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          message: "Product creation failed",
+          error: err,
+        });
+      });
+  }
+);
 
 router.get("/:productId", (req, res, next) => {
   const id = req.params.productId;
@@ -125,7 +131,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.patch("/:productId", (req, res, next) => {
+router.patch("/:productId", checkAuth, (req, res, next) => {
   const id = req.params.productId;
   // determine which properties will be updated
   const updateOps = {};
@@ -151,7 +157,7 @@ router.patch("/:productId", (req, res, next) => {
     });
 });
 
-router.delete("/:productId", (req, res, next) => {
+router.delete("/:productId", checkAuth, (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ _id: id })
     .exec()
