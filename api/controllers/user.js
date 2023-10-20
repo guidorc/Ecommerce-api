@@ -93,7 +93,7 @@ exports.signin = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  const id = req.params.orderId;
+  const id = req.params.userId;
   User.deleteOne({ _id: id })
     .exec()
     .then(() => {
