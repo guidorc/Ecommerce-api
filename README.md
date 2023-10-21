@@ -21,7 +21,7 @@ This route offers the possibility to create products, get all products, get a si
 - DELETE
   - ``/:productId``: Deletes the specified product from the database
 
-**Ejemplo de uso:**
+**Example use case:**
 
 ![list_products](https://github.com/guidorc/node-ecommerce/assets/50532651/16f4f71e-b664-45e8-84bd-bf7d5b75b0ff)
  
@@ -41,7 +41,7 @@ This route allows users to place orders, get all orders, get a single order by i
  
 **Note:** User authentication is needed to access all endpoints.
 
-**Ejemplo de uso:**
+**Example use case:**
 
 ![list_orders](https://github.com/guidorc/node-ecommerce/assets/50532651/38691bc4-3108-4553-8c6f-e2fd3163f82e)
 
@@ -56,7 +56,7 @@ This route allows users to sign-up, sign-in, as well as delete a specific user.
 - DELETE
   - ``/:userId``: Deletes the specified user from the system. **Note:** User authentication is needed to access this endpoint.
  
-**Ejemplo de uso:**
+**Example use case:**
 
 ![signin](https://github.com/guidorc/node-ecommerce/assets/50532651/5456dbf8-49b7-4efe-ae8e-3c833b1b33e5)
 
