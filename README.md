@@ -72,4 +72,5 @@ This route allows users to sign-up, sign-in, as well as delete a specific user.
 - To set up the project, execute npm install
 - To start the server, execute `npm start`
 - To run unit tests, execute `npm test`
+
   **Note:** All commands should be run on the root directory

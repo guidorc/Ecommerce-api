@@ -33,6 +33,36 @@ exports.get_all = async (req, res, next) => {
   }
 };
 
+exports.get_by_id = async (req, res, next) => {
+  try {
+    const id = req.params.orderId;
+    const order = await Order.findById(id)
+      .select("product quantity _id")
+      .populate("product")
+      .exec();
+
+    if (order) {
+      res.status(200).json({
+        ...order.toObject(),
+        info: {
+          type: "GET",
+          description: "Get all orders",
+          url: "http://localhost:3000/orders",
+        },
+      });
+    } else {
+      res.status(404).json({
+        message: "Unable to find requested order",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "Failed to find order",
+      error: err,
+    });
+  }
+};
+
 exports.create = async (req, res, next) => {
   try {
     const product = await Product.findById(req.body.productId);
@@ -69,35 +99,6 @@ exports.create = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       message: "Failed to create order",
-      error: err,
-    });
-  }
-};
-
-exports.get_by_id = async (req, res, next) => {
-  try {
-    const id = req.params.orderId;
-    const order = await Order.findById(id)
-      .select("product quantity _id")
-      .populate("product")
-      .exec();
-
-    if (order) {
-      res.status(200).json({
-        ...order.toObject(),
-        info: {
-          type: "GET",
-          description: "Get all orders",
-          url: "http://localhost:3000/orders",
-        },
-      });
-    } else {
-      res.status(404).json({
-        message: "Unable to find requested order",
-      });
-    }
-  } catch (err) {
-    res.status(500).json({
       error: err,
     });
   }
